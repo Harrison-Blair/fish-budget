@@ -7,7 +7,7 @@
         "dev": {
             "cache": false,
             "persistent": true,
-            "with": ["dev-server"]
+            "with": ["dev-server", "@fish-budget/supabase#dev"]
         }
     }
 }

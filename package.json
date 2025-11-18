@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "prettier": "^3.6.2",
-    "supabase": "^2.54.11",
+    "supabase": "^2.58.5",
     "turbo": "^2.6.0",
     "typescript": "5.9.2"
   },
@@ -20,6 +20,7 @@
   "packageManager": "npm@11.6.2",
   "workspaces": [
     "apps/*",
-    "packages/*"
+    "packages/*",
+    "supabase"
   ]
 }
