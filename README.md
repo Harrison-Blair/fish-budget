@@ -6,6 +6,8 @@ A simple budgeting app
 
 Follow the [React Native Setup Guide](https://reactnative.dev/docs/0.82/set-up-your-environment)
 
+Follow the [Supabase Local CLI Setup Guide](https://supabase.com/docs/guides/local-development/cli/getting-started?queryGroups=platform&platform=windows)
+
 Clone the repository & install dependencies:
 ```
 git clone https://github.com/Harrison-Blair/fish-budget.git
