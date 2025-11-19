@@ -1,135 +1,56 @@
-# Turborepo starter
+# fish-budget
 
-This Turborepo starter is maintained by the Turborepo core team.
+A simple budgeting app.
 
-## Using this example
+# Project Setup
 
-Run the following command:
+I would recomend installing [nvm](https://github.com/nvm-sh/nvm) ([For Windows](https://github.com/coreybutler/nvm-windows)). This is a suggestion in the below requirements, however I want to emphesize it's usefulness.
 
-```sh
-npx create-turbo@latest
+## Requirements
+
+Follow the [React Native Setup Guide](https://reactnative.dev/docs/0.82/set-up-your-environment)
+
+Follow the [Supabase Local CLI Setup Guide](https://supabase.com/docs/guides/local-development/cli/getting-started?queryGroups=platform&platform=windows)
+
+## Setup
+
+Clone the repository & install dependencies:
+```
+git clone https://github.com/Harrison-Blair/fish-budget.git
+
+cd ./fish-budget
+
+npm i
 ```
 
-## What's inside?
+## Run
 
-This Turborepo includes the following packages/apps:
+Run the project with turbo:
+`npx turbo dev`
 
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
+To run only a segment of the project:
 ```
-cd my-turborepo
+npx turbo mobile#dev
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+npx turbo web#dev
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+# Quick Help / Known Issues
+
+> [!IMPORTANT]
+> Read all terminal output first before coming here. Odds are your problem is well documented, however I have compiled a list of problems I have run into during the development of this app. Predominantly contains things I would forget when changing dev machines.
+
+## Mobile
+
+If `web` is working but `mobile` crashes almost immediately, you may need to set your `Android Sdk` path inside of `\fish-budget\apps\mobile\android\local.properties` by adding the following to that file (or creating one if there isn't one):
 
 ```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+sdk.dir="PATH/TO/ANDROID/SDK"
 ```
 
-### Develop
+On **Linux** this is most likely something like: `/home/$USER/Android/Sdk`
 
-To develop all apps and packages, run the following command:
+On **Windows** this is most likely something like: `C:\Users\$USER\AppData\Local\Android\Sdk`
 
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+# Contact
+Head to my website @ [harrison-blair.dev](https://www.harrison-blair.dev) for my information
