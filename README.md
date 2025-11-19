@@ -26,7 +26,7 @@ npm i
 ## Run
 
 Run the project with turbo:
-`npm turbo dev`
+`npx turbo dev`
 
 To run only a segment of the project:
 ```
