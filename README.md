@@ -4,7 +4,7 @@ A simple budgeting app.
 
 # Project Setup
 
-I would recomend installing [nvm](https://github.com/nvm-sh/nvm) ([For Windows](https://github.com/coreybutler/nvm-windows)). This is a suggestion in the below requiremnts, however I want to emphesize it's usefulness.
+I would recomend installing [nvm](https://github.com/nvm-sh/nvm) ([For Windows](https://github.com/coreybutler/nvm-windows)). This is a suggestion in the below requirements, however I want to emphesize it's usefulness.
 
 ## Requirements
 
