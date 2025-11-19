@@ -1,4 +1,4 @@
-# fish-buget
+# fish-budget
 
 A simple budgeting app.
 
