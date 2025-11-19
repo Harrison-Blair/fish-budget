@@ -30,9 +30,9 @@ Run the project with turbo:
 
 To run only a segment of the project:
 ```
-npm turbo mobile#dev
+npx turbo mobile#dev
 
-npm turbo web#dev
+npx turbo web#dev
 ```
 
 # Quick Help / Known Issues
