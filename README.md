@@ -18,7 +18,7 @@ Clone the repository & install dependencies:
 ```
 git clone https://github.com/Harrison-Blair/fish-budget.git
 
-cd ./fish-budgetl
+cd ./fish-budget
 
 npm i
 ```
