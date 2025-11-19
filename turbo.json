@@ -17,6 +17,16 @@
       "cache": false,
       "persistent": true,
       "with": ["@fish-budget/supabase#dev"]
+    },
+    "db:start": {
+      "cache": false,
+      "persistent": true,
+      "with": ["@fish-budget/supabase#dev"]
+    },
+    "db:stop": {
+      "cache": false,
+      "persistent": false,
+      "with": ["@fish-budget/supabase#stop"]
     }
   }
 }
