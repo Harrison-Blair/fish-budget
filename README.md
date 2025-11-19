@@ -38,7 +38,7 @@ npm turbo web#dev
 # Quick Help / Known Issues
 
 > [!IMPORTANT]
-> Read all terminal output first before coming here. Odds are your problem is well documented, however I have compiled a list of problems I have run into during the development of this app. Prodomiantly contains things I would forget when changing dev machines.
+> Read all terminal output first before coming here. Odds are your problem is well documented, however I have compiled a list of problems I have run into during the development of this app. Predominantly contains things I would forget when changing dev machines.
 
 ## Mobile
 
