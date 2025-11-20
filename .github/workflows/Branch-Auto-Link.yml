@@ -1,9 +1,9 @@
 name: Branch Auto Link
 
 on:
-  push:
-    branches:
-      - '**'
+  create:
+  pull_request:
+    types: [opened]
 
 jobs:
   link-issue:
