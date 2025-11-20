@@ -1,5 +1,5 @@
 {
-  "name": "@fish-budget/supabase-client",
+  "name": "@fish-budget/data-access",
   "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.js",
