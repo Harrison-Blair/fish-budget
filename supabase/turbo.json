@@ -4,6 +4,9 @@
         "dev": {
             "cache": false
         },
+        "reset": {
+            "cache": false
+        },
         "stop": {
             "cache": false
         }

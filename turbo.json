@@ -23,6 +23,11 @@
       "persistent": true,
       "with": ["@fish-budget/supabase#dev"]
     },
+    "db:reset": {
+      "cache": false,
+      "persistent": false,
+      "with": ["@fish-budget/supabase#reset"]
+    },
     "db:stop": {
       "cache": false,
       "persistent": false,
