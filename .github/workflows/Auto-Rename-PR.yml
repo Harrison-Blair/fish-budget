@@ -1,0 +1,39 @@
+name: Auto-Rename PR from Branch Name
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  rename-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Extract and Format PR Title
+        run: |
+          # Get the branch name
+          BRANCH_NAME="${{ github.head_ref }}"
+          
+          # Extract type, WI number, and title using regex
+          # Expected format: type/WI-#-Title
+          if [[ $BRANCH_NAME =~ ^([^/]+)/([A-Za-z]+-[0-9]+)-(.+)$ ]]; then
+            TYPE="${BASH_REMATCH[1]}"
+            WI_NUMBER="${BASH_REMATCH[2]}"
+            TITLE="${BASH_REMATCH[3]}"
+            
+            # Format: TYPE | WI # | Title
+            NEW_PR_TITLE="${TYPE^^} | ${WI_NUMBER} | ${TITLE}"
+            
+            echo "new_pr_title=$NEW_PR_TITLE" >> $GITHUB_ENV
+          else
+            echo "Branch name does not match expected format"
+            exit 1
+          fi
+      
+      - name: Update PR Title
+        if: env.new_pr_title != ''
+        run: |
+          gh pr edit ${{ github.event.pull_request.number }} --title "${{ env.new_pr_title }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
