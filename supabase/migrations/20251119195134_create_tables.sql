@@ -7,7 +7,7 @@ create type public.recurrence_rule as enum (
 
 create table public.profiles (
     id uuid not null references auth.users on delete cascade,
-    username varchar(50) not null,
+    username varchar(50) not null unique,
 
     primary key (id)
 );
@@ -18,6 +18,7 @@ create table public.transaction_templates (
     name varchar(50) not null,
     description varchar(255),
     amount decimal(10, 2) not null,
+    is_active boolean not null default true,
     recurrence_rule public.recurrence_rule not null,
     recurrence_interval integer not null,
     start_date date not null,
@@ -66,7 +67,8 @@ create table public.budget_categories (
     name varchar(50) not null,
     description varchar(255),
 
-    primary key (template_id, id)
+    primary key (template_id, id),
+    foreign key (template_id, parent_id) references public.budget_categories(template_id, id) on delete cascade
 );
 
 create table public.profile_budget_transactions(
