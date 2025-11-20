@@ -1,11 +1,16 @@
 name: Branch Auto Link
 
 on:
-  [push]
+  push:
+    branches:
+      - '**'
+  pull_request:
+    types: [opened, synchronize]
 
 jobs:
   link-issue:
     runs-on: ubuntu-latest
+    if: github.event.created == true
     permissions:
       contents: read
       issues: write
