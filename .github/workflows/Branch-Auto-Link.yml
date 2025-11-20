@@ -1,7 +1,8 @@
 name: Auto-Link Branch to Issue
 
 on:
-  create:
+  #create:
+    - push
 
 jobs:
   link-issue:
