@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: Check PR Title Format
         id: check_title
         run: |
@@ -24,16 +24,20 @@ jobs:
           echo "Current PR title: $PR_TITLE"
           
           # Check if title matches the expected format: TYPE | WI-# | Title
-          if [[ $PR_TITLE =~ ^[A-Z]+\ \|\ [A-Z]+-[0-9]+\ \|\ .+$ ]]; then
+          if [[ "$PR_TITLE" =~ ^[A-Z]+\ \|\ [A-Z]+-[0-9]+\ \|\ [^|]+$ ]]; then
             echo "title_valid=true" >> $GITHUB_OUTPUT
-            echo "PR title is already in correct format"
+            echo "✓ PR title is already in correct format"
+            exit 0
           else
             echo "title_valid=false" >> $GITHUB_OUTPUT
-            echo "PR title does not match expected format: TYPE | WI-# | Title"
+            echo "✗ PR title does not match expected format: TYPE | WI-# | Title"
+            echo "  Current: $PR_TITLE"
+            exit 0
           fi
-      
+
       - name: Extract and Format PR Title
-        id: parse
+        id: format_title
+        if: steps.check_title.outputs.title_valid == 'false'
         run: |
           # Get the branch name
           BRANCH_NAME="${{ github.head_ref }}"
@@ -47,20 +51,29 @@ jobs:
             WI_NUMBER="${BASH_REMATCH[2]}"
             TITLE="${BASH_REMATCH[3]}"
             
-            # Format: TYPE | WI # | Title
+            # Replace dashes with spaces in the title
+            TITLE="${TITLE//-/ }"
+            
+            # Format: TYPE | WI-# | Title
             NEW_PR_TITLE="${TYPE^^} | ${WI_NUMBER} | ${TITLE}"
             
             echo "new_pr_title=$NEW_PR_TITLE" >> $GITHUB_OUTPUT
-            echo "Successfully formatted PR title: $NEW_PR_TITLE"
+            echo "✓ Successfully formatted PR title: $NEW_PR_TITLE"
           else
-            echo "Branch name does not match expected format: $BRANCH_NAME"
+            echo "✗ Branch name does not match expected format: $BRANCH_NAME"
             echo "Expected format: type/WI-#-Title (e.g., feature/WI-123-Add-login)"
             exit 1
           fi
-
+      
       - name: Update PR Title
-        if: steps.parse.outputs.new_pr_title != ''
+        if: steps.check_title.outputs.title_valid == 'false' && steps.format_title.outputs.new_pr_title != ''
         run: |
-          gh pr edit ${{ github.event.pull_request.number }} --title "${{ steps.parse.outputs.new_pr_title }}"
+          gh pr edit ${{ github.event.pull_request.number }} --title "${{ steps.format_title.outputs.new_pr_title }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Title Already Correct
+        if: steps.check_title.outputs.title_valid == 'true'
+        run: |
+          echo "✓ PR title is already in the correct format"
+          echo "No changes needed"
