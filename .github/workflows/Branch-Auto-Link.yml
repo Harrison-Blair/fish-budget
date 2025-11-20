@@ -6,7 +6,6 @@ on:
 jobs:
   link-issue:
     runs-on: ubuntu-latest
-    if: github.event.after == '0'
     permissions:
       contents: read
       issues: write
