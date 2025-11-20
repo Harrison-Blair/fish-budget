@@ -2,7 +2,7 @@ name: Auto-Rename PR from Branch Name
 
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [opened, edited]
 
 jobs:
   rename-pr:
@@ -11,11 +11,6 @@ jobs:
       pull-requests: write
       contents: read
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
       - name: Check PR Title Format
         id: check_title
         run: |
