@@ -1,7 +1,7 @@
 import { createClient, SupportedStorage } from "@supabase/supabase-js";
 import { Database } from "../types/database.types.js";
 
-let clientInstance: ReturnType<typeof createClient> | null = null;
+let clientInstance: ReturnType<typeof createClient<Database>> | null = null;
 
 export interface SupabaseConifg {
     url: string
