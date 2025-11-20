@@ -59,7 +59,7 @@ jobs:
           
           # Check if the issue has linked branches
           LINKED=$(gh issue develop --list ${ISSUE_NUMBER} \
-            --repo "${{ github.repository }}"
+            --repo "${{ github.repository }}")
           
           if [ -n "$LINKED" ]; then
             echo "Branch already linked to issue #$ISSUE_NUMBER"
