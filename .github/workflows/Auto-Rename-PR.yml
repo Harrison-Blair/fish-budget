@@ -23,16 +23,14 @@ jobs:
           
           echo "Current PR title: $PR_TITLE"
           
-          # Check if title matches the expected format: TYPE | WI-# | Title
-          if [[ "$PR_TITLE" =~ ^[A-Z]+\ \|\ [A-Z]+-[0-9]+\ \|\ [^|]+$ ]]; then
+          # Check if title matches the expected format: TYPE | WI # | Title (with spaces instead of dashes)
+          if [[ "$PR_TITLE" =~ ^[A-Z]+\ \|\ [A-Z]+\ [0-9]+\ \|\ [^|]+$ ]]; then
             echo "title_valid=true" >> $GITHUB_OUTPUT
             echo "✓ PR title is already in correct format"
-            exit 0
           else
             echo "title_valid=false" >> $GITHUB_OUTPUT
-            echo "✗ PR title does not match expected format: TYPE | WI-# | Title"
+            echo "✗ PR title does not match expected format: TYPE | WI # | Title"
             echo "  Current: $PR_TITLE"
-            exit 0
           fi
 
       - name: Extract and Format PR Title
@@ -51,10 +49,13 @@ jobs:
             WI_NUMBER="${BASH_REMATCH[2]}"
             TITLE="${BASH_REMATCH[3]}"
             
+            # Replace dashes with spaces in WI number (e.g., WI-123 -> WI 123)
+            WI_NUMBER="${WI_NUMBER//-/ }"
+            
             # Replace dashes with spaces in the title
             TITLE="${TITLE//-/ }"
             
-            # Format: TYPE | WI-# | Title
+            # Format: TYPE | WI # | Title
             NEW_PR_TITLE="${TYPE^^} | ${WI_NUMBER} | ${TITLE}"
             
             echo "new_pr_title=$NEW_PR_TITLE" >> $GITHUB_OUTPUT
