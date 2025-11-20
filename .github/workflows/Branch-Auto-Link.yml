@@ -6,7 +6,7 @@ on:
 jobs:
   link-issue:
     runs-on: ubuntu-latest
-    if: github.event.ref_type == 'branch'
+    if: github.event.after == '0'
     permissions:
       contents: read
       issues: write
