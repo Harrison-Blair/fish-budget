@@ -57,51 +57,37 @@ jobs:
           ISSUE_NUMBER="${{ steps.search_issue.outputs.issue_number }}"
           BRANCH_NAME="${{ github.ref_name }}"
           
-          # Check if the branch is already linked by looking for it in linked branches
+          # Check if we already commented about this branch
           LINKED=$(gh issue view $ISSUE_NUMBER \
             --repo "${{ github.repository }}" \
-            --json linkedBranches \
-            --jq '.linkedBranches[].name | select(. == "'$BRANCH_NAME'") // empty')
+            --json comments \
+            --jq '.comments[].body | select(contains("Branch: '$BRANCH_NAME'")) // empty' | head -1)
           
           if [ -n "$LINKED" ]; then
-            echo "Branch already linked to issue #$ISSUE_NUMBER"
+            echo "Branch already noted on issue #$ISSUE_NUMBER"
             echo "already_linked=true" >> $GITHUB_OUTPUT
           else
-            echo "Branch not yet linked"
+            echo "Branch not yet noted"
             echo "already_linked=false" >> $GITHUB_OUTPUT
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Link Branch to Issue
+      - name: Add Branch Reference to Issue
         if: steps.check_link.outputs.already_linked == 'false'
         run: |
           ISSUE_NUMBER="${{ steps.search_issue.outputs.issue_number }}"
           BRANCH_NAME="${{ github.ref_name }}"
           REPO="${{ github.repository }}"
+          BRANCH_URL="${{ github.server_url }}/$REPO/tree/$BRANCH_NAME"
           
-          # Use GraphQL to link the branch to the issue
-          gh api graphql -f owner='${REPO%/*}' -f repo='${REPO##*/}' -f issue_number="$ISSUE_NUMBER" -f branch_name="$BRANCH_NAME" -f query='
-            query($owner: String!, $repo: String!, $issue_number: Int!) {
-              repository(owner: $owner, name: $repo) {
-                issue(number: $issue_number) {
-                  id
-                }
-              }
-            }
-            
-            mutation($issue_id: ID!, $branch_name: String!) {
-              linkRepositoryToPullRequest(input: {repositoryId: $issue_id, pullRequestId: $branch_name}) {
-                clientMutationId
-              }
-            }
-          ' 2>/dev/null || true
-          
-          # Fallback: Create a comment that mentions the branch (GitHub will auto-link it)
+          # Add a comment referencing the branch
+          # The actual link in the sidebar will appear when a PR is created or commits reference the issue
           gh issue comment $ISSUE_NUMBER \
             --repo "$REPO" \
-            --body "Branch: $BRANCH_NAME"
+            --body "Development Branch: [$BRANCH_NAME]($BRANCH_URL)"
           
-          echo "✓ Successfully linked branch $BRANCH_NAME to issue #$ISSUE_NUMBER"
+          echo "✓ Added branch reference to issue #$ISSUE_NUMBER"
+          echo "Note: Branch will appear in development sidebar once a PR is created or commits reference this issue"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
