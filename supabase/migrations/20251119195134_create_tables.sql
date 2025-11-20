@@ -48,7 +48,8 @@ create table public.budget_templates (
     id serial,
     
     author_profile_id uuid not null references public.profiles(id) on delete set null,
-    
+    is_public boolean not null default false,
+
     name varchar(50) not null,
     description text,
 
@@ -118,7 +119,15 @@ create table public.budget_template_rules (
     foreign key (template_id, category_id) references public.budget_categories(template_id, id) on delete cascade
 );
 
-/* ADD in policies pre merge - THIS NEEDS TO BE UNCOMMENTED AND ROW LEVEL SECURITY FOR ALL TABLES (or comperable security)
+/* 
+Add these policies in pre-deployment to supabase.
+
+Although probably not best practices to leave this undone, I want to be able to easily query
+the tables during development without RLS interfering. While I belive my design work is correct,
+due to the complexity of the data I want to run some userflows before finished implimentation.
+
+anywho, if you're reading this, thanks for checking out my code :)
+
 alter table public.profiles enable row level security;
 alter table public.transaction_templates enable row level security;
 alter table public.transactions enable row level security;
