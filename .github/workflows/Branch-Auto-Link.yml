@@ -4,12 +4,11 @@ on:
   push:
     branches:
       - '**'
-  pull_request:
-    types: [opened, synchronize]
 
 jobs:
   link-issue:
     runs-on: ubuntu-latest
+    if: github.event.created == true
     permissions:
       contents: read
       issues: write
@@ -38,6 +37,7 @@ jobs:
           
           # Search for issue with the WI number in title
           ISSUE_NUMBER=$(gh issue list \
+            --repo "${{ github.repository }}" \
             --search "WI $WI_NUMBER in:title" \
             --state all \
             --json number \
@@ -62,6 +62,7 @@ jobs:
           
           # Check if this branch is already linked to the issue
           LINKED=$(gh issue view $ISSUE_NUMBER \
+            --repo "${{ github.repository }}" \
             --json projectItems \
             --jq '.projectItems[].title | select(. == "'$BRANCH_NAME'") // empty')
           
@@ -82,6 +83,7 @@ jobs:
           BRANCH_URL="${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}"
           
           gh issue comment $ISSUE_NUMBER \
+            --repo "${{ github.repository }}" \
             --body "🔗 Linked branch: [${{ github.ref_name }}]($BRANCH_URL)"
           
           echo "✓ Successfully linked branch to issue #$ISSUE_NUMBER"
