@@ -9,11 +9,19 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
+      contents: read
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Extract and Format PR Title
         run: |
           # Get the branch name
           BRANCH_NAME="${{ github.head_ref }}"
+          
+          echo "Processing branch: $BRANCH_NAME"
           
           # Extract type, WI number, and title using regex
           # Expected format: type/WI-#-Title
@@ -26,8 +34,10 @@ jobs:
             NEW_PR_TITLE="${TYPE^^} | ${WI_NUMBER} | ${TITLE}"
             
             echo "new_pr_title=$NEW_PR_TITLE" >> $GITHUB_ENV
+            echo "Successfully formatted PR title: $NEW_PR_TITLE"
           else
-            echo "Branch name does not match expected format"
+            echo "Branch name does not match expected format: $BRANCH_NAME"
+            echo "Expected format: type/WI-#-Title (e.g., feature/WI-123-Add-login)"
             exit 1
           fi
       
