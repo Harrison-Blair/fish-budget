@@ -17,6 +17,7 @@ jobs:
           fetch-depth: 0
 
       - name: Extract and Format PR Title
+        id: parse
         run: |
           # Get the branch name
           BRANCH_NAME="${{ github.head_ref }}"
@@ -33,17 +34,17 @@ jobs:
             # Format: TYPE | WI # | Title
             NEW_PR_TITLE="${TYPE^^} | ${WI_NUMBER} | ${TITLE}"
             
-            echo "new_pr_title=$NEW_PR_TITLE" >> $GITHUB_ENV
+            echo "new_pr_title=$NEW_PR_TITLE" >> $GITHUB_OUTPUT
             echo "Successfully formatted PR title: $NEW_PR_TITLE"
           else
             echo "Branch name does not match expected format: $BRANCH_NAME"
             echo "Expected format: type/WI-#-Title (e.g., feature/WI-123-Add-login)"
             exit 1
           fi
-      
+
       - name: Update PR Title
-        if: env.new_pr_title != ''
+        if: steps.parse.outputs.new_pr_title != ''
         run: |
-          gh pr edit ${{ github.event.pull_request.number }} --title "${{ env.new_pr_title }}"
+          gh pr edit ${{ github.event.pull_request.number }} --title "${{ steps.parse.outputs.new_pr_title }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
