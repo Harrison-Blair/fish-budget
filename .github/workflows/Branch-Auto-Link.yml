@@ -78,12 +78,12 @@ jobs:
           BRANCH_NAME="${{ github.ref_name }}"
           REPO="${{ github.repository }}"
           
-          # Add a commit message with the develop keyword to link the branch
+          # Link branch to issue using the develop keyword
           # This uses GitHub's native linking feature in the development sidebar
           gh issue comment $ISSUE_NUMBER \
             --repo "$REPO" \
-            --body "#$BRANCH_NAME"
+            --body "develop $BRANCH_NAME"
           
-          echo "✓ Successfully linked branch to issue #$ISSUE_NUMBER using develop keyword"
+          echo "✓ Successfully linked branch to issue #$ISSUE_NUMBER"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
