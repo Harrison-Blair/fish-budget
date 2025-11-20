@@ -70,8 +70,8 @@ create table public.budget_categories (
 );
 
 create table public.profile_budget_transactions(
-    transaction_id integer not null,
     profile_id uuid not null,
+    transaction_id integer not null,
     template_id integer not null,
     category_id integer,
 
