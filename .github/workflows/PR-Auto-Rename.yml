@@ -64,7 +64,9 @@ jobs:
       - name: Update PR Title
         if: steps.check_title.outputs.title_valid == 'false' && steps.format_title.outputs.new_pr_title != ''
         run: |
-          gh pr edit ${{ github.event.pull_request.number }} --title "${{ steps.format_title.outputs.new_pr_title }}"
+          gh pr edit ${{ github.event.pull_request.number }} \
+            --repo "${{ github.repository }}" \
+            --title "${{ steps.format_title.outputs.new_pr_title }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
