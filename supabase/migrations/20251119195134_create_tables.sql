@@ -19,7 +19,9 @@ create table public.transaction_templates (
     description varchar(255),
     amount decimal(10, 2) not null,
     recurrence_rule public.recurrence_rule not null,
-    duration integer not null,
+    recurrence_interval integer not null,
+    start_date date not null,
+    end_date date,
 
     primary key (profile_id, id)
 );
@@ -43,7 +45,7 @@ create table public.budget_templates (
     name varchar(50) not null,
     description text,
     recurrence_rule public.recurrence_rule not null,
-    duration integer not null,
+    recurrence_interval integer not null,
 
     primary key (id)
 );
