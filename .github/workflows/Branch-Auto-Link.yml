@@ -1,0 +1,87 @@
+name: Branch Auto Link
+
+on:
+  create
+
+jobs:
+  link-issue:
+    runs-on: ubuntu-latest
+    if: github.event.ref_type == 'branch'
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - name: Extract WI Number from Branch Name
+        id: extract
+        run: |
+          BRANCH_NAME="${{ github.ref_name }}"
+          echo "Branch name: $BRANCH_NAME"
+          
+          # Extract WI number from branch name (e.g., feature/WI-123-Add-login -> 123)
+          if [[ $BRANCH_NAME =~ ^([^/]+)/([A-Za-z]+)-([0-9]+)-(.+)$ ]]; then
+            WI_NUMBER="${BASH_REMATCH[3]}"
+            echo "wi_number=$WI_NUMBER" >> $GITHUB_OUTPUT
+            echo "Found WI number: $WI_NUMBER"
+          else
+            echo "Branch name does not match expected format (type/WI-#-Title)"
+            echo "wi_number=" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Search for Corresponding Issue
+        id: search_issue
+        if: steps.extract.outputs.wi_number != ''
+        run: |
+          WI_NUMBER="${{ steps.extract.outputs.wi_number }}"
+          
+          # Search for issue with the WI number in title
+          ISSUE_NUMBER=$(gh issue list \
+            --search "WI $WI_NUMBER in:title" \
+            --state all \
+            --json number \
+            --jq '.[0].number // empty')
+          
+          if [ -z "$ISSUE_NUMBER" ]; then
+            echo "No issue found with WI $WI_NUMBER"
+            echo "issue_number=" >> $GITHUB_OUTPUT
+          else
+            echo "Found issue #$ISSUE_NUMBER"
+            echo "issue_number=$ISSUE_NUMBER" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check if Branch Already Linked
+        id: check_link
+        if: steps.search_issue.outputs.issue_number != ''
+        run: |
+          ISSUE_NUMBER="${{ steps.search_issue.outputs.issue_number }}"
+          BRANCH_NAME="${{ github.ref_name }}"
+          
+          # Check if this branch is already linked to the issue
+          LINKED=$(gh issue view $ISSUE_NUMBER \
+            --json projectItems \
+            --jq '.projectItems[].title | select(. == "'$BRANCH_NAME'") // empty')
+          
+          if [ -n "$LINKED" ]; then
+            echo "Branch already linked to issue #$ISSUE_NUMBER"
+            echo "already_linked=true" >> $GITHUB_OUTPUT
+          else
+            echo "Branch not yet linked"
+            echo "already_linked=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Link Branch to Issue
+        if: steps.check_link.outputs.already_linked == 'false'
+        run: |
+          ISSUE_NUMBER="${{ steps.search_issue.outputs.issue_number }}"
+          BRANCH_URL="${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}"
+          
+          gh issue comment $ISSUE_NUMBER \
+            --body "🔗 Linked branch: [${{ github.ref_name }}]($BRANCH_URL)"
+          
+          echo "✓ Successfully linked branch to issue #$ISSUE_NUMBER"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
