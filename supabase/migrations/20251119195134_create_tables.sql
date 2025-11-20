@@ -15,14 +15,16 @@ create table public.profiles (
 create table public.transaction_templates (
     profile_id uuid not null references public.profiles(id) on delete cascade,
     id integer not null,
+    
     name varchar(50) not null,
     description varchar(255),
     amount decimal(10, 2) not null,
-    is_active boolean not null default true,
+    
     recurrence_rule public.recurrence_rule not null,
     recurrence_interval integer not null,
     start_date date not null,
     end_date date,
+    is_active boolean not null default true,
 
     primary key (profile_id, id)
 );
@@ -30,7 +32,9 @@ create table public.transaction_templates (
 create table public.transactions (
     profile_id uuid not null references public.profiles(id) on delete cascade,
     id integer not null,
+    
     template_id integer,
+    
     name varchar(50) not null,
     description varchar(255),
     amount decimal(10, 2) not null,
@@ -42,9 +46,12 @@ create table public.transactions (
 
 create table public.budget_templates (
     id serial,
+    
     author_profile_id uuid not null references public.profiles(id) on delete set null,
+    
     name varchar(50) not null,
     description text,
+
     recurrence_rule public.recurrence_rule not null,
     recurrence_interval integer not null,
 
@@ -54,6 +61,7 @@ create table public.budget_templates (
 create table public.profile_budget_templates (
     profile_id uuid not null references public.profiles(id) on delete cascade,
     template_id integer not null references public.budget_templates(id) on delete cascade,
+    
     is_active boolean not null default true,
     start_date date not null,
 
@@ -63,7 +71,9 @@ create table public.profile_budget_templates (
 create table public.budget_categories (
     template_id integer not null references public.budget_templates(id) on delete cascade,
     id integer not null,
+    
     parent_id integer,
+    
     name varchar(50) not null,
     description varchar(255),
 
@@ -75,6 +85,7 @@ create table public.profile_budget_transactions(
     profile_id uuid not null,
     transaction_id integer not null,
     template_id integer not null,
+    
     category_id integer,
 
     primary key (transaction_id, profile_id, template_id),
@@ -87,6 +98,7 @@ create table public.budget_allocations (
     profile_id uuid not null,
     template_id integer not null,
     category_id integer not null,
+    
     allocated_amount decimal(10, 2) not null,
 
     primary key (profile_id, template_id, category_id),
@@ -97,6 +109,7 @@ create table public.budget_allocations (
 create table public.budget_template_rules (
     template_id integer not null references public.budget_templates(id) on delete cascade,
     category_id integer not null,
+    
     name varchar(50),
     percentage_allocation decimal(5, 2),
     fixed_amount decimal(10, 2),
