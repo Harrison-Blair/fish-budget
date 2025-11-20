@@ -24,7 +24,7 @@ export function DataAccessProvider({ children }: { children: React.ReactNode }) 
             storage: typeof window !== 'undefined' ? window.localStorage : undefined,
         });
 
-        console.log('Supabase client initialized.');
+        console.log('Database client initialized.');
     }, []);
 
     return (
