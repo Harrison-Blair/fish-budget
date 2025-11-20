@@ -1,7 +1,7 @@
 name: Branch Auto Link
 
 on:
-  create
+  push
 
 jobs:
   link-issue:
