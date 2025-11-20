@@ -34,20 +34,18 @@ jobs:
         run: |
           WI_NUMBER="${{ steps.extract.outputs.wi_number }}"
           
-          # Search for issue with the WI number in title
-          ISSUE_NUMBER=$(gh issue list \
+          # Check if an issue with this number exists
+          ISSUE_EXISTS=$(gh issue view $WI_NUMBER \
             --repo "${{ github.repository }}" \
-            --search "WI $WI_NUMBER in:title" \
-            --state all \
             --json number \
-            --jq '.[0].number // empty')
+            --jq '.number // empty' 2>/dev/null)
           
-          if [ -z "$ISSUE_NUMBER" ]; then
-            echo "No issue found with WI $WI_NUMBER"
+          if [ -z "$ISSUE_EXISTS" ]; then
+            echo "No issue found with number #$WI_NUMBER"
             echo "issue_number=" >> $GITHUB_OUTPUT
           else
-            echo "Found issue #$ISSUE_NUMBER"
-            echo "issue_number=$ISSUE_NUMBER" >> $GITHUB_OUTPUT
+            echo "Found issue #$WI_NUMBER"
+            echo "issue_number=$WI_NUMBER" >> $GITHUB_OUTPUT
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
