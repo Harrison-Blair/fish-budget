@@ -30,14 +30,18 @@ jobs:
         id: check_body
         if: steps.extract.outputs.wi_number != ''
         run: |
-          PR_BODY="${{ github.event.pull_request.body }}"
           WI_NUMBER="${{ steps.extract.outputs.wi_number }}"
           
+          # Write PR body to temp file to handle special characters
+          cat > /tmp/pr_body_check.txt << 'EOF'
+          ${{ github.event.pull_request.body }}
+          EOF
+          
           echo "Current PR body:"
-          echo "$PR_BODY"
+          cat /tmp/pr_body_check.txt
           
           # Check if body contains closing syntax for this issue (closes #N, fixes #N, resolves #N)
-          if [[ "$PR_BODY" =~ (closes|fixes|resolves)[[:space:]]+\#${WI_NUMBER} ]]; then
+          if grep -iE "(closes|fixes|resolves)[[:space:]]+#${WI_NUMBER}" /tmp/pr_body_check.txt > /dev/null; then
             echo "body_has_closing=true" >> $GITHUB_OUTPUT
             echo "✓ PR body already contains closing syntax for issue #$WI_NUMBER"
           else
