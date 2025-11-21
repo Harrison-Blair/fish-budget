@@ -36,15 +36,15 @@ jobs:
           
           echo "Current PR body:"
           echo "$PR_BODY"
-          shopt -s nocasematch
-          if [[ "$PR_BODY" =~ (closes|fixes|resolves)[[:space:]]+\#${WI_NUMBER} ]]; then
+          
+          # Check if body contains closing syntax for this issue (closes #N, fixes #N, resolves #N)
+          if echo "$PR_BODY" | grep -iE "(closes|fixes|resolves)[[:space:]]+#${WI_NUMBER}" > /dev/null; then
             echo "body_has_closing=true" >> $GITHUB_OUTPUT
             echo "✓ PR body already contains closing syntax for issue #$WI_NUMBER"
           else
             echo "body_has_closing=false" >> $GITHUB_OUTPUT
             echo "✗ PR body does not contain closing syntax for issue #$WI_NUMBER"
           fi
-        shell: bash
 
       - name: Add Closing Syntax to PR Body
         if: steps.check_body.outputs.body_has_closing == 'false'
