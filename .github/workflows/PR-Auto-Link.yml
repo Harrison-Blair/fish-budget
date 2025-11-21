@@ -36,8 +36,7 @@ jobs:
           
           echo "Current PR body:"
           echo "$PR_BODY"
-          
-          # Check if body contains closing syntax for this issue (closes #N, fixes #N, resolves #N)
+          shopt -s nocasematch
           if [[ "$PR_BODY" =~ (closes|fixes|resolves)[[:space:]]+\#${WI_NUMBER} ]]; then
             echo "body_has_closing=true" >> $GITHUB_OUTPUT
             echo "✓ PR body already contains closing syntax for issue #$WI_NUMBER"
