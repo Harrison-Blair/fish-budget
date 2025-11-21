@@ -26,7 +26,6 @@ jobs:
             echo "Branch name does not match expected format (type/WI-#-Title)"
             echo "wi_number=" >> $GITHUB_OUTPUT
           fi
-
       - name: Check PR Body for Closing Syntax
         id: check_body
         if: steps.extract.outputs.wi_number != ''
@@ -38,14 +37,13 @@ jobs:
           echo "$PR_BODY"
           
           # Check if body contains closing syntax for this issue (closes #N, fixes #N, resolves #N)
-          if echo "$PR_BODY" | grep -iE "(closes|fixes|resolves)[[:space:]]+#${WI_NUMBER}" > /dev/null; then
+          if [[ "$PR_BODY" =~ (closes|fixes|resolves)[[:space:]]+\#${WI_NUMBER} ]]; then
             echo "body_has_closing=true" >> $GITHUB_OUTPUT
             echo "✓ PR body already contains closing syntax for issue #$WI_NUMBER"
           else
             echo "body_has_closing=false" >> $GITHUB_OUTPUT
             echo "✗ PR body does not contain closing syntax for issue #$WI_NUMBER"
           fi
-
       - name: Add Closing Syntax to PR Body
         if: steps.check_body.outputs.body_has_closing == 'false'
         run: |
@@ -58,7 +56,7 @@ jobs:
             NEW_BODY="Closes #$WI_NUMBER"
           else
             NEW_BODY="${PR_BODY}
-Closes #${WI_NUMBER}"
+          Closes #${WI_NUMBER}"
           fi
           
           # Update the PR body
