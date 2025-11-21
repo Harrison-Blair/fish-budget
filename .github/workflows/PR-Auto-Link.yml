@@ -58,8 +58,7 @@ jobs:
             NEW_BODY="Closes #$WI_NUMBER"
           else
             NEW_BODY="${PR_BODY}
-          
-            Closes #${WI_NUMBER}"
+Closes #${WI_NUMBER}"
           fi
           
           # Update the PR body
