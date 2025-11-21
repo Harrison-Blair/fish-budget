@@ -45,6 +45,7 @@ jobs:
             echo "body_has_closing=false" >> $GITHUB_OUTPUT
             echo "✗ PR body does not contain closing syntax for issue #$WI_NUMBER"
           fi
+        shell: bash
 
       - name: Add Closing Syntax to PR Body
         if: steps.check_body.outputs.body_has_closing == 'false'
