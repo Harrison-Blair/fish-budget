@@ -29,11 +29,22 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Set turbo filter
+        id: set-filter
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            echo "filter=" >> $GITHUB_OUTPUT
+          else
+            echo "filter=--filter='...[main]'" >> $GITHUB_OUTPUT
+          fi
+
       - name: Lint changed packages
-        run: npx turbo run lint --filter='...[main]' --filter='!@fish-budget/supabase'
+        run: |
+          npx turbo run lint ${{ steps.set-filter.outputs.filter }} --filter='!@fish-budget/supabase'
 
       - name: Type check changed packages
-        run: npx turbo run check-types --filter='...[main]' --filter='!@fish-budget/supabase'
+        run: |
+          npx turbo run check-types ${{ steps.set-filter.outputs.filter }} --filter='!@fish-budget/supabase'
 
   lint-supabase:
     name: Lint Supabase
