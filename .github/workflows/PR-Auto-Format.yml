@@ -1,6 +1,8 @@
 name: Auto-Format PR Code
 
 on:
+  push:
+    branches: [main]
   pull_request:
     branches: [main]
 
@@ -16,7 +18,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}
+          ref: ${{ github.head_ref || github.ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js

@@ -1,6 +1,8 @@
 name: Auto-Lint PR Diffs
 
 on:
+  push:
+    branches: [main]
   pull_request:
     branches: [main]
 

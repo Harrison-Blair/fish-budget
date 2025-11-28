@@ -22,5 +22,8 @@
     "apps/*",
     "packages/*",
     "supabase"
-  ]
+  ],
+  "dependencies": {
+    "@supabase/supabase-js": "^2.84.0"
+  }
 }
