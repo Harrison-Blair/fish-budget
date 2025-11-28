@@ -1,4 +1,4 @@
-name: Auto-Format Code
+name: Auto-Format PR Code
 
 on:
   pull_request:
