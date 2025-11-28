@@ -30,7 +30,48 @@ jobs:
         run: npm ci
 
       - name: Lint changed packages
-        run: npx turbo run lint --affected
+        run: npx turbo run lint --affected --filter='!@fish-budget/supabase'
 
       - name: Type check changed packages
-        run: npx turbo run check-types --affected
+        run: npx turbo run check-types --affected --filter='!@fish-budget/supabase'
+
+  lint-supabase:
+    name: Lint Supabase
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check if supabase changed
+        id: changes
+        run: |
+          git fetch origin main:main
+          if git diff --name-only main...HEAD | grep -q '^supabase/'; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Supabase CLI
+        if: steps.changes.outputs.changed == 'true'
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start Supabase
+        if: steps.changes.outputs.changed == 'true'
+        run: supabase start
+        working-directory: ./supabase
+
+      - name: Lint Supabase
+        if: steps.changes.outputs.changed == 'true'
+        run: supabase db lint
+        working-directory: ./supabase
+
+      - name: Stop Supabase
+        if: steps.changes.outputs.changed == 'true'
+        run: supabase stop
+        working-directory: ./supabase
