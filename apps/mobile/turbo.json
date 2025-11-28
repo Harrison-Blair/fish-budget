@@ -1,13 +1,13 @@
 {
-    "extends": ["//"],
-    "tasks": {
-        "dev-server": {
-            "cache": false
-        },
-        "dev": {
-            "cache": false,
-            "persistent": true,
-            "with": ["dev-server", "@fish-budget/supabase#dev"]
-        }
+  "extends": ["//"],
+  "tasks": {
+    "dev-server": {
+      "cache": false
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true,
+      "with": ["dev-server", "@fish-budget/supabase#dev"]
     }
+  }
 }

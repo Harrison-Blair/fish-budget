@@ -12,7 +12,7 @@ body:
       description: Briefly describe what is happening, and what should happen
       placeholder: |
         When I toggle light/dark mode, different elements on the page transition at different speeds. 
-        They should all transform uniformly.  
+        They should all transform uniformly.
     validations:
       required: true
   - type: dropdown
@@ -31,7 +31,7 @@ body:
     id: reproduction-steps
     attributes:
       label: Reproduction Steps
-      placeholder: | 
+      placeholder: |
         1. Navigate to website
         2. Click the toggle theme icon on the nav bar
         3. Observe theme change

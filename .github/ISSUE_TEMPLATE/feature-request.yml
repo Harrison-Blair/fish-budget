@@ -14,7 +14,7 @@ body:
         I would like <feature>,
         because it would <reasoning>.
     validations:
-        required: true
+      required: true
   - type: dropdown
     id: story-points
     attributes:
