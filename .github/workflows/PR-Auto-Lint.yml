@@ -30,7 +30,7 @@ jobs:
         run: npm ci
 
       - name: Lint changed packages
-        run: npx turbo run lint --affected --affected-base=main
+        run: npx turbo run lint --affected
 
       - name: Type check changed packages
-        run: npx turbo run check-types --affected --affected-base=main
+        run: npx turbo run check-types --affected
