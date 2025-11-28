@@ -15,9 +15,9 @@ jobs:
         id: check_title
         run: |
           PR_TITLE="${{ github.event.pull_request.title }}"
-          
+
           echo "Current PR title: $PR_TITLE"
-          
+
           # Check if title matches the expected format: TYPE | WI # | Title (with spaces instead of dashes)
           if [[ "$PR_TITLE" =~ ^[A-Z]+\ \|\ [A-Z]+\ [0-9]+\ \|\ [^|]+$ ]]; then
             echo "title_valid=true" >> $GITHUB_OUTPUT
@@ -34,9 +34,9 @@ jobs:
         run: |
           # Get the branch name
           BRANCH_NAME="${{ github.head_ref }}"
-          
+
           echo "Processing branch: $BRANCH_NAME"
-          
+
           # Extract type, WI number, and title using regex
           # Expected format: type/WI-#-Title
           if [[ $BRANCH_NAME =~ ^([^/]+)/([A-Za-z]+-[0-9]+)-(.+)$ ]]; then
@@ -60,7 +60,7 @@ jobs:
             echo "Expected format: type/WI-#-Title (e.g., feature/WI-123-Add-login)"
             exit 1
           fi
-      
+
       - name: Update PR Title
         if: steps.check_title.outputs.title_valid == 'false' && steps.format_title.outputs.new_pr_title != ''
         run: |

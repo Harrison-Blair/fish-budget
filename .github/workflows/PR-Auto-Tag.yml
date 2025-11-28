@@ -15,9 +15,9 @@ jobs:
         id: check_labels
         run: |
           PR_LABELS="${{ join(github.event.pull_request.labels.*.name, ' ') }}"
-          
+
           echo "Current PR labels: $PR_LABELS"
-          
+
           # Check if PR already has one of the type labels
           if [[ "$PR_LABELS" =~ (feature|chore|bug|spike) ]]; then
             echo "has_type_label=true" >> $GITHUB_OUTPUT
@@ -33,7 +33,7 @@ jobs:
         run: |
           BRANCH_NAME="${{ github.head_ref }}"
           echo "Branch name: $BRANCH_NAME"
-          
+
           # Extract type from branch name (e.g., feature/WI-123-Add-login -> feature)
           if [[ $BRANCH_NAME =~ ^([^/]+)/([A-Za-z]+)-([0-9]+)-(.+)$ ]]; then
             TYPE="${BASH_REMATCH[1]}"
@@ -57,11 +57,11 @@ jobs:
         run: |
           PR_NUMBER="${{ github.event.pull_request.number }}"
           LABEL="${{ steps.extract.outputs.branch_type }}"
-          
+
           gh pr edit $PR_NUMBER \
             --repo "${{ github.repository }}" \
             --add-label "$LABEL"
-          
+
           echo "✓ Added label '$LABEL' to PR #$PR_NUMBER"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

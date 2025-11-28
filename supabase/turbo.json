@@ -1,14 +1,14 @@
 {
-    "extends": ["//"],
-    "tasks": {
-        "dev": {
-            "cache": false
-        },
-        "reset": {
-            "cache": false
-        },
-        "stop": {
-            "cache": false
-        }
+  "extends": ["//"],
+  "tasks": {
+    "dev": {
+      "cache": false
+    },
+    "reset": {
+      "cache": false
+    },
+    "stop": {
+      "cache": false
     }
+  }
 }
