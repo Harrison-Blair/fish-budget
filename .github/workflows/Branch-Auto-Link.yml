@@ -1,4 +1,4 @@
-name: Issue Auto-Link to Branch
+name: Branch Auto-Link to Issue
 
 on:
   create:
