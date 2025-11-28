@@ -30,10 +30,10 @@ jobs:
         run: npm ci
 
       - name: Lint changed packages
-        run: npx turbo run lint --affected --filter='!@fish-budget/supabase'
+        run: npx turbo run lint --filter='...[main]' --filter='!@fish-budget/supabase'
 
       - name: Type check changed packages
-        run: npx turbo run check-types --affected --filter='!@fish-budget/supabase'
+        run: npx turbo run check-types --filter='...[main]' --filter='!@fish-budget/supabase'
 
   lint-supabase:
     name: Lint Supabase
