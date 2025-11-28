@@ -31,7 +31,10 @@ jobs:
         run: npm ci
 
       - name: Run formatter
-        run: npm run format
+        run: npm run format -- --ignore-path .prettierignore '!.github/**'
+
+      - name: Revert any .github changes
+        run: git checkout -- .github/ 2>/dev/null || true
 
       - name: Check for changes
         id: changes
