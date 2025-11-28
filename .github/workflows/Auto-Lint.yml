@@ -88,6 +88,6 @@ jobs:
         working-directory: ./supabase
 
       - name: Stop Supabase
-        if: steps.changes.outputs.changed == 'true'
+        if: always() && steps.changes.outputs.changed == 'true'
         run: supabase stop
         working-directory: ./supabase
