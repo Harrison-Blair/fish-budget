@@ -1,1 +1,1 @@
-export {createSupabaseClient as initializeDatabaseAccess} from './client/instance.js';
+export { createSupabaseClient as initializeDatabaseAccess } from "./client/instance.js";
