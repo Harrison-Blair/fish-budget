@@ -30,7 +30,7 @@ jobs:
         run: npm ci
 
       - name: Lint changed packages
-        run: npx turbo run lint --filter='[origin/main...]'
+        run: npx turbo run lint --filter='[main...]'
 
       - name: Type check changed packages
-        run: npx turbo run check-types --filter='[origin/main...]'
+        run: npx turbo run check-types --filter='[main...]'
