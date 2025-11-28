@@ -21,7 +21,7 @@ export function createSupabaseClient(config: SupabaseConifg) {
     throw new Error("Client needs BOTH url AND anonKey");
   }
 
-  return createClient<Database>(url, anonKey, {
+  clientInstance = createClient<Database>(url, anonKey, {
     auth: {
       storage: storage,
       autoRefreshToken: true,
@@ -29,6 +29,8 @@ export function createSupabaseClient(config: SupabaseConifg) {
       detectSessionInUrl: false,
     },
   });
+
+  return clientInstance;
 }
 
 export function getClient() {
