@@ -1,0 +1,91 @@
+name: Auto-Lint PR Diffs
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    name: Lint Changed Packages
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch main branch
+        run: git fetch origin main:main
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "latest"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Set turbo filter
+        id: set-filter
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            echo "filter=" >> $GITHUB_OUTPUT
+          else
+            echo "filter=--filter='...[main]'" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Lint changed packages
+        run: |
+          npx turbo run lint ${{ steps.set-filter.outputs.filter }} --filter='!@fish-budget/supabase'
+
+      - name: Type check changed packages
+        run: |
+          npx turbo run check-types ${{ steps.set-filter.outputs.filter }} --filter='!@fish-budget/supabase'
+
+  lint-supabase:
+    name: Lint Supabase
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check if supabase changed
+        id: changes
+        run: |
+          git fetch origin main:main
+          if [ "${{ github.event_name }}" = "push" ]; then
+            DIFF_RANGE="HEAD~1..HEAD"
+          else
+            DIFF_RANGE="main...HEAD"
+          fi
+          if git diff --name-only $DIFF_RANGE | grep -q '^supabase/'; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Supabase CLI
+        if: steps.changes.outputs.changed == 'true'
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start Supabase
+        if: steps.changes.outputs.changed == 'true'
+        run: supabase start
+        working-directory: ./supabase
+
+      - name: Lint Supabase
+        if: steps.changes.outputs.changed == 'true'
+        run: supabase db lint
+        working-directory: ./supabase
+
+      - name: Stop Supabase
+        if: always() && steps.changes.outputs.changed == 'true'
+        run: supabase stop
+        working-directory: ./supabase

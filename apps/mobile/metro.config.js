@@ -12,13 +12,9 @@ const monorepoRoot = path.resolve(__dirname, '../../');
  */
 const config = {
   projectRoot,
-  watchFolders: [
-    path.resolve(monorepoRoot, 'node_modules'),
-  ],
+  watchFolders: [path.resolve(monorepoRoot, 'node_modules')],
   resolver: {
-    nodeModulesPaths: [
-      path.resolve(monorepoRoot, 'node_modules'),
-    ],
+    nodeModulesPaths: [path.resolve(monorepoRoot, 'node_modules')],
   },
 };
 

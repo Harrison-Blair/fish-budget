@@ -15,6 +15,7 @@ Follow the [Supabase Local CLI Setup Guide](https://supabase.com/docs/guides/loc
 ## Setup
 
 Clone the repository & install dependencies:
+
 ```
 git clone https://github.com/Harrison-Blair/fish-budget.git
 
@@ -29,6 +30,7 @@ Run the project with turbo:
 `npx turbo dev`
 
 To run only a segment of the project:
+
 ```
 npx turbo mobile#dev
 
@@ -53,4 +55,5 @@ On **Linux** this is most likely something like: `/home/$USER/Android/Sdk`
 On **Windows** this is most likely something like: `C:\Users\$USER\AppData\Local\Android\Sdk`
 
 # Contact
+
 Head to my website @ [harrison-blair.dev](https://www.harrison-blair.dev) for my information
